@@ -8,12 +8,14 @@ use Yii;
  * This is the model class for table "deal".
  *
  * @property int $id
+ * @property int $stock_id
  * @property string $name
  * @property double $price
  * @property int $num
  * @property string $date
- * @property int $type 1买 2卖
- * @property int $f_id
+ * @property double $sell_price
+ * @property string $sell_date
+ * @property int $is_sell
  */
 class Deal extends \yii\db\ActiveRecord
 {
@@ -31,9 +33,9 @@ class Deal extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['price'], 'number'],
-            [['num', 'type', 'f_id'], 'integer'],
-            [['date'], 'safe'],
+            [['stock_id', 'num', 'is_sell'], 'integer'],
+            [['price', 'sell_price'], 'number'],
+            [['date', 'sell_date'], 'safe'],
             [['name'], 'string', 'max' => 50],
         ];
     }
@@ -45,12 +47,14 @@ class Deal extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'stock_id' => 'Stock ID',
             'name' => 'Name',
             'price' => 'Price',
             'num' => 'Num',
             'date' => 'Date',
-            'type' => 'Type',
-            'f_id' => 'F ID',
+            'sell_price' => 'Sell Price',
+            'sell_date' => 'Sell Date',
+            'is_sell' => 'Is Sell',
         ];
     }
 }

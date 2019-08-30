@@ -65,6 +65,22 @@ class DealController extends Controller
         ]);
     }
 
+    public function actionSell($id){
+        $model = $this->findModel($id);
+        $sell_price=Yii::$app->request->post('sell_price');
+        $model->sell_price=$sell_price;
+        if($sell_price){
+            $model->is_sell=1;
+            $model->sell_date=date('Y-m-d H:i:s');
+        }else{
+            $model->is_sell=1;
+            $model->sell_date='';
+        }
+        $model->save();
+
+        return $this->redirect(['index']);
+    }
+
     /**
      * Displays a single Deal model.
      * @param integer $id

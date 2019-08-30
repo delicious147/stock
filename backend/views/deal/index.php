@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+//use kartik\grid\GridView;
+use kartik\editable\Editable;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\search\DealSearch */
@@ -57,7 +59,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'price',
             'num',
 //            'date',
-            'sell_price',
+//            'sell_price',
+            [
+                'label'=>'Sell Price',
+                'format'=>'raw',
+                'value' => function ($model) {
+                    return \kartik\editable\Editable::widget([
+                        'name' => 'sell_price',
+                        'value' => $model['sell_price'],
+//                        'attribute' => 'sell_price',
+                        'formOptions' => [
+                            'method' => 'post',
+                            'action' => Yii::$app->urlManager->createAbsoluteUrl(['deal/sell', 'id' => $model['id']])
+                        ],
+                    ]);
+                },
+            ],
 //            'sell_date',
             'win_money',
             '1%_price',
