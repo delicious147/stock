@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\core\Deal;
 use backend\models\search\DealSearch;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -36,11 +37,31 @@ class DealController extends Controller
     public function actionIndex()
     {
         $searchModel = new DealSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $query = $searchModel->search(Yii::$app->request->queryParams);
+        $list=$query->asArray()->all();
+        $sell=$searchModel->minSellMoney();
+        $buy=$searchModel->buyMoney();
+        $provider_sell = new ArrayDataProvider([
+            'allModels' => $sell,
+            'sort' => false,
+            'pagination' => false,
+        ]);
+        $provider_buy = new ArrayDataProvider([
+            'allModels' => $buy,
+            'sort' => false,
+            'pagination' => false,
+        ]);
+        $provider = new ArrayDataProvider([
+            'allModels' => $list,
+            'sort' => false,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $provider,
+            'provider_sell' => $provider_sell,
+            'provider_buy' => $provider_buy,
         ]);
     }
 

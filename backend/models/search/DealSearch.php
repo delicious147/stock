@@ -4,7 +4,7 @@ namespace backend\models\search;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\core\Deal;
+use common\models\Deal;
 
 /**
  * DealSearch represents the model behind the search form of `common\models\core\Deal`.
@@ -17,7 +17,7 @@ class DealSearch extends Deal
     public function rules()
     {
         return [
-            [['id', 'num', 'type', 'f_id'], 'integer'],
+            [['id', 'num'], 'integer'],
             [['name', 'date'], 'safe'],
             [['price'], 'number'],
         ];
@@ -41,34 +41,63 @@ class DealSearch extends Deal
      */
     public function search($params)
     {
-        $query = Deal::find();
+        $query = Deal::find()->alias('d1')
+            ->select([
+                '*',
+                'TRUNCATE(price*(1.01),2) as "1%_price"',
+                'TRUNCATE(price*(1.02),2) as "2%_price"',
+                'TRUNCATE(price*(1.03),2) as "3%_price"',
+                'TRUNCATE(price*(1.04),2) as "4%_price"',
+                'TRUNCATE(price*(1.05),2) as "5%_price"',
+                'if(is_sell=1,TRUNCATE((sell_price-price)*num,2),0) win_money'
+            ])
+        ;
 
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
 
         $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
+            return $query;
         }
+
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'price' => $this->price,
-            'num' => $this->num,
-            'date' => $this->date,
-            'type' => $this->type,
-            'f_id' => $this->f_id,
+            'd1.id' => $this->id,
+            'd1.price' => $this->price,
+            'd1.num' => $this->num,
+            'd1.date' => $this->date,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'd1.name', $this->name]);
+        $query->orderBy(['is_sell'=>SORT_ASC,'d1.name'=>SORT_DESC,'d1.price'=>SORT_ASC]);
 
-        return $dataProvider;
+        return $query;
+    }
+
+    public function minSellMoney(){
+        $min=Deal::find()
+            ->select([
+                'name',
+                'min(price) price',
+                'TRUNCATE(min(price)*(1.02),2) as "2%_price"',
+                'TRUNCATE(min(price)*(1.04),2) as "4%_price"'
+            ])
+            ->andWhere(['is_sell'=>0])
+            ->groupBy('name')
+            ->asArray()
+            ->all();
+        ;
+        return $min;
+    }
+
+    public function BuyMoney(){
+        $sql='
+        select *,TRUNCATE(price*(0.98),2) as "2%_price",TRUNCATE(price*(0.96),2) as "4%_price" from (select * from deal where is_sell=1 order by sell_date)a group by name
+        ';
+        $buy=\Yii::$app->db->createCommand($sql)->queryAll();
+        return $buy;
     }
 }

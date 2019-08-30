@@ -19,20 +19,52 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Deal', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row clearfix">
+                <div class="col-md-6 column">
+                    <?= GridView::widget([
+                        'dataProvider' => $provider_sell,
+                        'columns' => [
+                            'name',
+                            'price',
+                            '2%_price',
+                            '4%_price',
+                        ],
+                    ]); ?>
+                </div>
+                <div class="col-md-6 column">
+                    <?= GridView::widget([
+                        'dataProvider' => $provider_buy,
+                        'columns' => [
+                            'name',
+                            'price',
+                            '2%_price',
+                            '4%_price',
+                        ],
+                    ]); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+//        'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'name',
             'price',
             'num',
-            'date',
-            //'type',
-            //'f_id',
-
+//            'date',
+            'sell_price',
+//            'sell_date',
+            'win_money',
+            '1%_price',
+            '2%_price',
+            '3%_price',
+            '4%_price',
+            '5%_price',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
