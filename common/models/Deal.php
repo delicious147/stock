@@ -17,5 +17,9 @@ use Yii;
  */
 class Deal extends core\Deal
 {
+    public function getStock()
+    {
+        return $this->hasOne(Stock::className(), ['id' => 'stock_id']);
+    }
 
 }

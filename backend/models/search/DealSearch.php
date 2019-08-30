@@ -17,8 +17,8 @@ class DealSearch extends Deal
     public function rules()
     {
         return [
-            [['id', 'num'], 'integer'],
-            [['name', 'date'], 'safe'],
+            [['id', 'num','stock_id'], 'integer'],
+            [['date'], 'safe'],
             [['price'], 'number'],
         ];
     }
@@ -70,9 +70,7 @@ class DealSearch extends Deal
             'd1.num' => $this->num,
             'd1.date' => $this->date,
         ]);
-
-        $query->andFilterWhere(['like', 'd1.name', $this->name]);
-        $query->orderBy(['is_sell'=>SORT_ASC,'d1.name'=>SORT_DESC,'d1.price'=>SORT_ASC]);
+        $query->orderBy(['is_sell'=>SORT_ASC,'d1.stock_id'=>SORT_DESC,'d1.price'=>SORT_ASC]);
 
         return $query;
     }
@@ -80,13 +78,13 @@ class DealSearch extends Deal
     public function minSellMoney(){
         $min=Deal::find()
             ->select([
-                'name',
+                'stock_id',
                 'min(price) price',
                 'TRUNCATE(min(price)*(1.02),2) as "2%_price"',
                 'TRUNCATE(min(price)*(1.04),2) as "4%_price"'
             ])
             ->andWhere(['is_sell'=>0])
-            ->groupBy('name')
+            ->groupBy('stock_id')
             ->asArray()
             ->all();
         ;
@@ -95,7 +93,7 @@ class DealSearch extends Deal
 
     public function BuyMoney(){
         $sql='
-        select *,TRUNCATE(price*(0.98),2) as "2%_price",TRUNCATE(price*(0.96),2) as "4%_price" from (select * from deal where is_sell=1 order by sell_date)a group by name
+        select *,TRUNCATE(price*(0.98),2) as "2%_price",TRUNCATE(price*(0.96),2) as "4%_price" from (select * from deal where is_sell=1 order by sell_date)a group by stock_id
         ';
         $buy=\Yii::$app->db->createCommand($sql)->queryAll();
         return $buy;

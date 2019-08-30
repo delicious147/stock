@@ -20,7 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Deal', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+    <?php
+    $stock_map=\common\models\Stock::getMap();
+    ?>
     <div class="row clearfix">
         <div class="col-md-12 column">
             <div class="row clearfix">
@@ -28,7 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= GridView::widget([
                         'dataProvider' => $provider_sell,
                         'columns' => [
-                            'name',
+                            [
+                                'label'=>'Name',
+                                'format'=>'raw',
+                                'value' => function ($model) use($stock_map) {
+                                    return isset($stock_map[$model['stock_id']])?$stock_map[$model['stock_id']]:'';
+                                },
+                            ],
+//                            'name',
                             'price',
                             '2%_price',
                             '4%_price',
@@ -39,7 +48,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?= GridView::widget([
                         'dataProvider' => $provider_buy,
                         'columns' => [
-                            'name',
+                            [
+                                'label'=>'Name',
+                                'format'=>'raw',
+                                'value' => function ($model) use($stock_map) {
+                                    return isset($stock_map[$model['stock_id']])?$stock_map[$model['stock_id']]:'';
+                                },
+                            ],
+//                            'name',
                             'price',
                             '2%_price',
                             '4%_price',
@@ -55,7 +71,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
         'columns' => [
-            'name',
+//            'stock_name',
+            [
+                'label'=>'Name',
+                'format'=>'raw',
+                'value' => function ($model) use($stock_map) {
+                    return isset($stock_map[$model['stock_id']])?$stock_map[$model['stock_id']]:'';
+                },
+            ],
             'price',
             'num',
 //            'date',

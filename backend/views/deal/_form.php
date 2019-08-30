@@ -20,14 +20,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'num')->textInput() ?>
 
-    <?= $form->field($model, 'date')->textInput() ?>
-
-    <?= $form->field($model, 'sell_price')->textInput() ?>
-
-    <?= $form->field($model, 'sell_date')->textInput() ?>
-
-    <?= $form->field($model, 'is_sell')->textInput() ?>
-
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
