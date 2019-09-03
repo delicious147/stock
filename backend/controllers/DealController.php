@@ -41,6 +41,7 @@ class DealController extends Controller
         $list=$query->asArray()->all();
         $sell=$searchModel->minSellMoney();
         $buy=$searchModel->buyMoney();
+//        $now_price=$searchModel->nowPrice();
         $provider_sell = new ArrayDataProvider([
             'allModels' => $sell,
             'sort' => false,

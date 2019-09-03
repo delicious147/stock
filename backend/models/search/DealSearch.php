@@ -2,6 +2,7 @@
 
 namespace backend\models\search;
 
+use common\components\MyHelper;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Deal;
@@ -93,9 +94,36 @@ class DealSearch extends Deal
 
     public function BuyMoney(){
         $sql='
-        select *,TRUNCATE(price*(0.98),2) as "2%_price",TRUNCATE(price*(0.96),2) as "4%_price" from (select * from deal where is_sell=1 order by sell_date)a group by stock_id
+        select *,TRUNCATE(sell_price*(0.98),2) as "2%_price",TRUNCATE(sell_price*(0.96),2) as "4%_price" from (select * from deal where is_sell=1 order by sell_date desc)a group by stock_id
         ';
         $buy=\Yii::$app->db->createCommand($sql)->queryAll();
         return $buy;
     }
+
+//    public function nowPrice(){
+//        $url='http://hq.sinajs.cn/list=';
+////        $url='http://qt.gtimg.cn/q=';
+//        $sql='select * from stock where id in (select stock_id from deal where is_sell=0 group by stock_id)';
+//        $stock=\Yii::$app->db->createCommand($sql)->queryAll();
+//        foreach ($stock as $k=>$v){
+//            $url.=$v['type'].$v['stock_code'].',';
+//        }
+//        $url=rtrim($url, ',');
+//        $response=MyHelper::get($url);
+//
+//
+//        //////////////////////////////////////////
+//
+//        $html = "<b>bold text</b><a href=howdy.html>click me</a>";
+//
+//        preg_match_all("/(<([\w]+)[^>]*>)(.*?)(<\/\\2>)/", $html, $matches, PREG_SET_ORDER);
+//
+//        foreach ($matches as $val) {
+//            echo "matched: " . $val[0] . "\n";
+//            echo "part 1: " . $val[1] . "\n";
+//            echo "part 2: " . $val[2] . "\n";
+//            echo "part 3: " . $val[3] . "\n";
+//            echo "part 4: " . $val[4] . "\n\n";
+//        }
+//    }
 }

@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-md-12 column">
             <div class="row clearfix">
                 <div class="col-md-6 column">
+                    <h3>Sell price</h3>
                     <?= GridView::widget([
                         'dataProvider' => $provider_sell,
                         'columns' => [
@@ -45,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]); ?>
                 </div>
                 <div class="col-md-6 column">
+                    <h3>Buy price</h3>
                     <?= GridView::widget([
                         'dataProvider' => $provider_buy,
                         'columns' => [
@@ -56,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },
                             ],
 //                            'name',
-                            'price',
+                            'sell_price',
                             '2%_price',
                             '4%_price',
                         ],
@@ -66,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-
+    <h3>Deal list</h3>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
