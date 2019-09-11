@@ -17,4 +17,16 @@ class Stock extends core\Stock
         return Stock::find()->select('stock_name')->indexBy('id')->column();
     }
 
+    public static function getCode(){
+        return Stock::find()->select('stock_code')->indexBy('id')->column();
+    }
+
+    public static function getFullCode(){
+        return Stock::find()->select(['CONCAT(type,stock_code)'])->column();
+    }
+
+    public static function getFullCodeMap(){
+        return Stock::find()->select('full_code')->indexBy('id')->column();
+    }
+
 }

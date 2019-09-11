@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property string $stock_name
  * @property string $stock_code
+ * @property string $full_code
  * @property string $type
  */
 class Stock extends \yii\db\ActiveRecord
@@ -28,7 +29,7 @@ class Stock extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['stock_name', 'stock_code', 'type'], 'string', 'max' => 50],
+            [['stock_name', 'stock_code', 'full_code', 'type'], 'string', 'max' => 50],
         ];
     }
 
@@ -41,6 +42,7 @@ class Stock extends \yii\db\ActiveRecord
             'id' => 'ID',
             'stock_name' => 'Stock Name',
             'stock_code' => 'Stock Code',
+            'full_code' => 'Full Code',
             'type' => 'Type',
         ];
     }

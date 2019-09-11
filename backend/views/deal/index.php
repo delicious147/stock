@@ -22,6 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <?php
     $stock_map=\common\models\Stock::getMap();
+    $stock_code=\common\models\Stock::getCode();
     ?>
     <div class="row clearfix">
         <div class="col-md-12 column">
@@ -40,6 +41,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
 //                            'name',
                             'price',
+                            [
+                                'label'=>'Now Price',
+                                'format'=>'raw',
+                                'value' => function ($model){
+                                    return '<span class="'.$model['stock']['full_code'].'"> </span>';
+                                },
+                            ],
                             '2%_price',
                             '4%_price',
                         ],
@@ -59,6 +67,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
 //                            'name',
                             'sell_price',
+                            [
+                                'label'=>'Now Price',
+                                'format'=>'raw',
+                                'value' => function ($model){
+                                    return '<span class="'.$model['stock']['full_code'].'"> </span>';
+                                },
+                            ],
                             '2%_price',
                             '4%_price',
                         ],
@@ -111,3 +126,23 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 </div>
+
+
+
+
+<?php
+$this->registerJsFile("http://hq.sinajs.cn/list=$stock");
+$js = <<<JS
+    var stock_str='$stock'
+    var stock_arr = stock_str.split(",");
+    for(let i=0;i<stock_arr.length;i++){
+       var elements=eval("hq_str_"+stock_arr[i]).split(",")
+       $('.'+stock_arr[i]).html(elements[3])
+       // alert(elements[3])
+   }
+JS;
+$this->registerJs($js);
+
+?>
+
+

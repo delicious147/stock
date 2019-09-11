@@ -9,7 +9,6 @@ use Yii;
  *
  * @property int $id
  * @property int $stock_id
- * @property string $name
  * @property double $price
  * @property int $num
  * @property string $date
@@ -36,7 +35,6 @@ class Deal extends \yii\db\ActiveRecord
             [['stock_id', 'num', 'is_sell'], 'integer'],
             [['price', 'sell_price'], 'number'],
             [['date', 'sell_date'], 'safe'],
-            [['name'], 'string', 'max' => 50],
         ];
     }
 
@@ -48,7 +46,6 @@ class Deal extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'stock_id' => 'Stock ID',
-            'name' => 'Name',
             'price' => 'Price',
             'num' => 'Num',
             'date' => 'Date',

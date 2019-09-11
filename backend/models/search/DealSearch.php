@@ -3,6 +3,7 @@
 namespace backend\models\search;
 
 use common\components\MyHelper;
+use common\models\Stock;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Deal;
@@ -77,7 +78,7 @@ class DealSearch extends Deal
     }
 
     public function minSellMoney(){
-        $min=Deal::find()
+        $sell=Deal::find()
             ->select([
                 'stock_id',
                 'min(price) price',
@@ -89,14 +90,26 @@ class DealSearch extends Deal
             ->asArray()
             ->all();
         ;
-        return $min;
+        $stock=Stock::find()->indexBy('id')->asArray()->all();
+        foreach ($sell as $k=>$v){
+            $sell[$k]['stock']=$stock[$v['stock_id']];
+        }
+        return $sell;
     }
 
     public function BuyMoney(){
         $sql='
-        select *,TRUNCATE(sell_price*(0.98),2) as "2%_price",TRUNCATE(sell_price*(0.96),2) as "4%_price" from (select * from deal where is_sell=1 order by sell_date desc)a group by stock_id
+        select *,
+        TRUNCATE(sell_price*(0.98),2) as "2%_price",
+        TRUNCATE(sell_price*(0.96),2) as "4%_price" 
+        from (select * from deal where is_sell=1 order by sell_date desc)a 
+        group by stock_id
         ';
         $buy=\Yii::$app->db->createCommand($sql)->queryAll();
+        $stock=Stock::find()->indexBy('id')->asArray()->all();
+        foreach ($buy as $k=>$v){
+            $buy[$k]['stock']=$stock[$v['stock_id']];
+        }
         return $buy;
     }
 

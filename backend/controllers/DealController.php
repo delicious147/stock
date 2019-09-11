@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\models\Stock;
 use Yii;
 use common\models\core\Deal;
 use backend\models\search\DealSearch;
@@ -59,10 +60,13 @@ class DealController extends Controller
                 'pageSize' => 10,
             ],
         ]);
+        $stock=Stock::getFullCode();
+        $stock=implode(",", $stock);
         return $this->render('index', [
             'dataProvider' => $provider,
             'provider_sell' => $provider_sell,
             'provider_buy' => $provider_buy,
+            'stock'=>$stock,
         ]);
     }
 
