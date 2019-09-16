@@ -12,6 +12,9 @@ use kartik\editable\Editable;
 $this->title = 'Deals';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<style>
+    .red{color: red;}
+</style>
 <div class="deal-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -44,8 +47,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'label'=>'Now Price',
                                 'format'=>'raw',
-                                'value' => function ($model){
-                                    return '<span class="'.$model['stock']['full_code'].'"> </span>';
+                                'value' => function (){
+                                    return '';
+                                },
+                                'contentOptions' => function ($model){
+                                    return[
+                                            'class'=>$model['stock']['full_code'],
+                                            'style'=>'color:#ccc',
+                                    ] ;
                                 },
                             ],
                             '2%_price',
@@ -70,8 +79,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'label'=>'Now Price',
                                 'format'=>'raw',
-                                'value' => function ($model){
-                                    return '<span class="'.$model['stock']['full_code'].'"> </span>';
+                                'value' => function (){
+                                    return '';
+                                },
+                                'contentOptions' => function ($model){
+                                    return[
+                                        'class'=>$model['stock']['full_code'],
+                                        'style'=>'color:#ccc',
+                                    ] ;
                                 },
                             ],
                             '2%_price',
@@ -140,6 +155,8 @@ $js = <<<JS
        $('.'+stock_arr[i]).html(elements[3])
        // alert(elements[3])
    }
+   
+   
 JS;
 $this->registerJs($js);
 
