@@ -13,7 +13,8 @@ $this->title = 'Deals';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <style>
-    .red{color: red;}
+    .deal-index .red{color: #a94442;}
+    .gray{color: #ccc;}
 </style>
 <div class="deal-index">
 
@@ -34,12 +35,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h3>Sell price</h3>
                     <?= GridView::widget([
                         'dataProvider' => $provider_sell,
+                        'options' => ['class'=>'sell_box'],
                         'columns' => [
                             [
                                 'label'=>'Name',
                                 'format'=>'raw',
-                                'value' => function ($model) use($stock_map) {
-                                    return isset($stock_map[$model['stock_id']])?$stock_map[$model['stock_id']]:'';
+                                'value' => function ($model) {
+                                    return $model['stock']['stock_name'];
                                 },
                             ],
 //                            'name',
@@ -52,8 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },
                                 'contentOptions' => function ($model){
                                     return[
-                                            'class'=>$model['stock']['full_code'],
-                                            'style'=>'color:#ccc',
+                                        'class'=>[$model['stock']['full_code'],'gray'],
                                     ] ;
                                 },
                             ],
@@ -66,16 +67,17 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h3>Buy price</h3>
                     <?= GridView::widget([
                         'dataProvider' => $provider_buy,
+                        'options' => ['class'=>'buy_box'],
                         'columns' => [
                             [
                                 'label'=>'Name',
                                 'format'=>'raw',
-                                'value' => function ($model) use($stock_map) {
-                                    return isset($stock_map[$model['stock_id']])?$stock_map[$model['stock_id']]:'';
+                                'value' => function ($model) {
+                                    return $model['stock']['stock_name'];
                                 },
                             ],
 //                            'name',
-                            'sell_price',
+                            'price',
                             [
                                 'label'=>'Now Price',
                                 'format'=>'raw',
@@ -84,8 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 },
                                 'contentOptions' => function ($model){
                                     return[
-                                        'class'=>$model['stock']['full_code'],
-                                        'style'=>'color:#ccc',
+                                        'class'=>[$model['stock']['full_code'],'gray'],
                                     ] ;
                                 },
                             ],
@@ -153,7 +154,13 @@ $js = <<<JS
     for(let i=0;i<stock_arr.length;i++){
        var elements=eval("hq_str_"+stock_arr[i]).split(",")
        $('.'+stock_arr[i]).html(elements[3])
-       // alert(elements[3])
+       // console.log($('.'+stock_arr[i]).next().html())
+       if($('.sell_box .'+stock_arr[i]).next().html()<$('.sell_box .'+stock_arr[i]).html()){
+           $('.sell_box .'+stock_arr[i]).addClass('red')
+       }
+       if($('.buy_box .'+stock_arr[i]).next().html()>$('.buy_box .'+stock_arr[i]).html()){
+           $('.buy_box .'+stock_arr[i]).addClass('red')
+       }
    }
    
    

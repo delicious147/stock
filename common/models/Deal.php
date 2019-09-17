@@ -3,18 +3,19 @@
 namespace common\models;
 
 use Yii;
-
 /**
  * This is the model class for table "deal".
  *
  * @property int $id
- * @property string $name
+ * @property int $stock_id
  * @property double $price
  * @property int $num
  * @property string $date
- * @property int $type 1买 2卖
- * @property int $f_id
+ * @property double $sell_price
+ * @property string $sell_date
+ * @property int $is_sell
  */
+
 class Deal extends core\Deal
 {
     public function getStock()
