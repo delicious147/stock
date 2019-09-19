@@ -7,6 +7,7 @@ use common\models\Stock;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Deal;
+use Yii;
 
 /**
  * DealSearch represents the model behind the search form of `common\models\core\Deal`.
@@ -97,21 +98,21 @@ class DealSearch extends Deal
         return $sell;
     }
 
-    public function BuyMoney2(){
-        $sql='
-        select *,
-        TRUNCATE(sell_price*(0.98),2) as "2%_price",
-        TRUNCATE(sell_price*(0.96),2) as "4%_price" 
-        from (select * from deal where is_sell=1 order by sell_date desc)a 
-        group by stock_id
-        ';
-        $buy=\Yii::$app->db->createCommand($sql)->queryAll();
-        $stock=Stock::find()->indexBy('id')->asArray()->all();
-        foreach ($buy as $k=>$v){
-            $buy[$k]['stock']=$stock[$v['stock_id']];
-        }
-        return $buy;
-    }
+//    public function BuyMoney2(){
+//        $sql='
+//        select *,
+//        TRUNCATE(sell_price*(0.98),2) as "2%_price",
+//        TRUNCATE(sell_price*(0.96),2) as "4%_price"
+//        from (select * from deal where is_sell=1 order by sell_date desc)a
+//        group by stock_id
+//        ';
+//        $buy=\Yii::$app->db->createCommand($sql)->queryAll();
+//        $stock=Stock::find()->indexBy('id')->asArray()->all();
+//        foreach ($buy as $k=>$v){
+//            $buy[$k]['stock']=$stock[$v['stock_id']];
+//        }
+//        return $buy;
+//    }
 
     public function BuyMoney(){
         $stock=Stock::find()->indexBy('id')->asArray()->all();
@@ -127,4 +128,21 @@ class DealSearch extends Deal
         return $buy;
 
     }
+
+    public function winMoney(){
+        $sql="select sum((sell_price-price)*num) money from deal where is_sell=1;";
+        $data = Yii::$app->db->createCommand($sql)->queryOne();
+        $money=$data['money'];
+        $money=floor($money*(999/1000)*(9997.5/10000));
+        return $money;
+    }
+
+    public function inMoney(){
+        $sql="select sum(price*num) money from deal where is_sell=0;";
+        $data = Yii::$app->db->createCommand($sql)->queryOne();
+        $money=floor($data['money']);
+        return $money;
+    }
+
+
 }

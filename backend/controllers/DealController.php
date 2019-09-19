@@ -67,6 +67,8 @@ class DealController extends Controller
             'provider_sell' => $provider_sell,
             'provider_buy' => $provider_buy,
             'stock'=>$stock,
+            'in_money'=>$searchModel->inMoney(),
+            'win_money'=>$searchModel->winMoney(),
         ]);
     }
 

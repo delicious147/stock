@@ -15,6 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <style>
     .deal-index .red{color: #a94442;}
     .gray{color: #ccc;}
+    .box{ padding:10px;}
 </style>
 <div class="deal-index">
 
@@ -24,6 +25,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Deal', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <div class="row clearfix">
+        <div class="col-md-3 column">
+            <div class="box center-block bg-success">
+                <p>Win money</p>
+                <h4><?= $win_money?></h4>
+            </div>
+        </div>
+        <div class="col-md-3 column">
+            <div class="box center-block bg-success">
+                <p>In money</p>
+                <h4><?= $in_money?></h4>
+            </div>
+        </div>
+    </div>
     <?php
     $stock_map=\common\models\Stock::getMap();
     $stock_code=\common\models\Stock::getCode();
