@@ -83,8 +83,9 @@ class DealSearch extends Deal
             ->select([
                 'stock_id',
                 'min(price) price',
-                'TRUNCATE(min(price)*(1.02),2) as "2%_price"',
-                'TRUNCATE(min(price)*(1.04),2) as "4%_price"'
+                'round(min(price)*(1.01),2) as "1%_price"',
+                'round(min(price)*(1.02),2) as "2%_price"',
+                'round(min(price)*(1.04),2) as "4%_price"'
             ])
             ->andWhere(['is_sell'=>0])
             ->groupBy('stock_id')
@@ -98,22 +99,6 @@ class DealSearch extends Deal
         return $sell;
     }
 
-//    public function BuyMoney2(){
-//        $sql='
-//        select *,
-//        TRUNCATE(sell_price*(0.98),2) as "2%_price",
-//        TRUNCATE(sell_price*(0.96),2) as "4%_price"
-//        from (select * from deal where is_sell=1 order by sell_date desc)a
-//        group by stock_id
-//        ';
-//        $buy=\Yii::$app->db->createCommand($sql)->queryAll();
-//        $stock=Stock::find()->indexBy('id')->asArray()->all();
-//        foreach ($buy as $k=>$v){
-//            $buy[$k]['stock']=$stock[$v['stock_id']];
-//        }
-//        return $buy;
-//    }
-
     public function BuyMoney(){
         $stock=Stock::find()->indexBy('id')->asArray()->all();
         $buy=[];
@@ -122,6 +107,7 @@ class DealSearch extends Deal
             $deal1=Deal::find()->where(['stock_id'=>$v['id']])->orderBy('date desc')->indexBy('stock_id')->asArray()->one();
             $deal2=Deal::find()->where(['stock_id'=>$v['id']])->orderBy('sell_date desc')->indexBy('stock_id')->asArray()->one();
             $buy[$k]['price']=strtotime($deal1['date'])>strtotime($deal2['sell_date'])?$deal1['price']:$deal2['sell_price'];
+            $buy[$k]['1%_price']=round($buy[$k]['price']*0.99,2);
             $buy[$k]['2%_price']=round($buy[$k]['price']*0.98,2);
             $buy[$k]['4%_price']=round($buy[$k]['price']*0.96,2);
         }

@@ -73,6 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ] ;
                                 },
                             ],
+                            '1%_price',
                             '2%_price',
                             '4%_price',
                         ],
@@ -105,6 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ] ;
                                 },
                             ],
+                            '1%_price',
                             '2%_price',
                             '4%_price',
                         ],
