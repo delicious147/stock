@@ -77,6 +77,40 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]); ?>
                 </div>
 
+                <div class="col-md-6 column">
+                    <h3>Buy price</h3>
+                    <?= GridView::widget([
+                        'dataProvider' => $provider_buy,
+                        'options' => ['class'=>'sell_box'],
+                        'columns' => [
+                            [
+                                'label'=>'Name',
+                                'format'=>'raw',
+                                'value' => function ($model) {
+                                    return $model['stock']['stock_name'];
+                                },
+                            ],
+//                            'name',
+                            'price',
+                            [
+                                'label'=>'Now Price',
+                                'format'=>'raw',
+                                'value' => function (){
+                                    return '';
+                                },
+                                'contentOptions' => function ($model){
+                                    return[
+                                        'class'=>[$model['stock']['full_code'],'gray'],
+                                    ] ;
+                                },
+                            ],
+                            '1%_price',
+                            '2%_price',
+                            '4%_price',
+                        ],
+                    ]); ?>
+                </div>
+
             </div>
         </div>
     </div>

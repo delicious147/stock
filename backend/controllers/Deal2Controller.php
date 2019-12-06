@@ -44,9 +44,13 @@ class Deal2Controller extends Controller
     {
         $searchModel = new Deal2Search();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $sell=$searchModel->minSellMoney();
         $provider_sell = new ArrayDataProvider([
-            'allModels' => $sell,
+            'allModels' => $searchModel->minSellMoney(),
+            'sort' => false,
+            'pagination' => false,
+        ]);
+        $provider_buy = new ArrayDataProvider([
+            'allModels' => $searchModel->buyMoney(),
             'sort' => false,
             'pagination' => false,
         ]);
@@ -59,6 +63,7 @@ class Deal2Controller extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'provider_sell' => $provider_sell,
+            'provider_buy' => $provider_buy,
             'win_money'=>$searchModel->winMoney(),
         ]);
     }
