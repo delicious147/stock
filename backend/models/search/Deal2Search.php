@@ -2,6 +2,7 @@
 
 namespace backend\models\search;
 
+use common\models\Stock;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Deal2;
@@ -45,25 +46,17 @@ class Deal2Search extends Deal2
     {
         $query = Deal2::find();
         $query->with('stock');
-
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSize' => 50,
             ],
         ]);
-
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
-
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'stock_id' => $this->stock_id,
@@ -75,11 +68,45 @@ class Deal2Search extends Deal2
         ]);
 
         $query->andFilterWhere(['like', 'remark', $this->remark]);
-
-//        $query->orderBy('date desc');
-
-//        $res=$query->asArray()->all();
-
         return $dataProvider;
+    }
+
+    public function minSellMoney(){
+        $sell=Deal2::find()
+            ->select([
+                'stock_id',
+                'min(price) price',
+                'round(min(price)*(1.01),2) as "1%_price"',
+                'round(min(price)*(1.02),2) as "2%_price"',
+                'round(min(price)*(1.04),2) as "4%_price"'
+            ])
+            ->andWhere(['is_sell'=>0])
+            ->andWhere(['status'=>0])
+            ->groupBy('stock_id')
+            ->asArray()
+            ->all();
+        ;
+        $stock=Stock::find()->indexBy('id')->asArray()->all();
+        foreach ($sell as $k=>$v){
+            $sell[$k]['stock']=$stock[$v['stock_id']];
+        }
+        return $sell;
+    }
+
+    public function winMoney(){
+        $buy_money=Deal2::find()
+            ->select(['sum(price)*100 as buy_money'])
+            ->andWhere(['status'=>0])
+            ->andWhere(['is_sell'=>1])
+            ->asArray()
+            ->one();
+
+        $sell_money=Deal2::find()
+            ->select(['sum(price)*100 as sell_money'])
+            ->andWhere(['status'=>1])
+            ->asArray()
+            ->one();
+
+        return ceil($sell_money['sell_money']-$buy_money['buy_money']);
     }
 }

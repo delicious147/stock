@@ -44,10 +44,22 @@ class Deal2Controller extends Controller
     {
         $searchModel = new Deal2Search();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $sell=$searchModel->minSellMoney();
+        $provider_sell = new ArrayDataProvider([
+            'allModels' => $sell,
+            'sort' => false,
+            'pagination' => false,
+        ]);
+
+        $stock=Stock::getFullCode();
+        $stock=implode(",", $stock);
 
         return $this->render('index', [
+            'stock'=>$stock,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'provider_sell' => $provider_sell,
+            'win_money'=>$searchModel->winMoney(),
         ]);
     }
 
@@ -55,22 +67,28 @@ class Deal2Controller extends Controller
     {
         $model = new Deal2();
 
-        if ($model->load(Yii::$app->request->post()) ) {
-            $model->save();
-            if($model->status==1){
-                $lest_buy=Deal2::find()
-                    ->andWhere(['status'=>0])
-                    ->andWhere(['is_sell'=>0])
-                    ->orderBy('price asc')
-                    ->one();
-                if($lest_buy){
-                    $lest_buy->is_sell=1;
-                    $lest_buy->save();
+        if ($model->load(Yii::$app->request->post())) {
+            $num=$model->num;
+            $count=$num/100;
+            for ($i=0;$i<$count;$i++){
+                $model = new Deal2();
+                $model->load(Yii::$app->request->post());
+                $model->num=100;
+                $model->save();
+                if($model->status==1){
+                    $lest_buy=Deal2::find()
+                        ->andWhere(['status'=>0])
+                        ->andWhere(['is_sell'=>0])
+                        ->orderBy('price asc')
+                        ->one();
+                    if($lest_buy){
+                        $lest_buy->is_sell=1;
+                        $lest_buy->save();
+                    }
                 }
             }
             return $this->redirect(['index']);
         }
-
         return $this->render('create', [
             'model' => $model,
         ]);
