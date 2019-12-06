@@ -65,6 +65,7 @@ class Deal2Controller extends Controller
             'provider_sell' => $provider_sell,
             'provider_buy' => $provider_buy,
             'win_money'=>$searchModel->winMoney(),
+            'in_money'=>$searchModel->inMoney(),
         ]);
     }
 
@@ -84,6 +85,7 @@ class Deal2Controller extends Controller
                     $lest_buy=Deal2::find()
                         ->andWhere(['status'=>0])
                         ->andWhere(['is_sell'=>0])
+                        ->andWhere(['stock_id'=>$model->stock_id])
                         ->orderBy('price asc')
                         ->one();
                     if($lest_buy){

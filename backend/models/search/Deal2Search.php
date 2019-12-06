@@ -137,4 +137,14 @@ class Deal2Search extends Deal2
 
         return ceil($sell_money['sell_money']-$buy_money['buy_money']);
     }
+
+    public function inMoney(){
+        $money=Deal2::find()
+            ->select(['sum(price)*100 as money'])
+            ->andWhere(['status'=>0])
+            ->andWhere(['is_sell'=>0])
+            ->asArray()
+            ->one();
+        return ceil($money['money']);
+    }
 }

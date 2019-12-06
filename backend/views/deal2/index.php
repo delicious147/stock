@@ -34,6 +34,13 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
+        <div class="col-md-3 column">
+            <div class="box center-block bg-success">
+                <p>In money</p>
+                <h4><?= $in_money?></h4>
+            </div>
+        </div>
+
     </div>
 
     <?php
