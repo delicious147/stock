@@ -16,23 +16,35 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Deal2', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Deal', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'rowOptions' => function($model, $key, $index, $grid) {
+            if ($model['status']=='0'){
+                return ['style' => 'color:#c63c26'];  //红色
+            }elseif ($model['status']=='1'){
+                return ['style' => 'color:#5c7a29'];  //绿色
+            }
+        },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
+            [
+                'format'=>'raw',
+                'label' => 'stock Name',
+                'value' => function ($model) {
+                    return $model->stock->stock_name;
+                }
+            ],
             'stock_id',
             'price',
             'num',
             'date',
             //'remark',
-            //'status',
-            //'is_sell',
+            'status',
+            'is_sell',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
