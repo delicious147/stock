@@ -167,4 +167,5 @@ class Deal2Search extends Deal2
         return ceil($money['money']);
     }
 
+
 }

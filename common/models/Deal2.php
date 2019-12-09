@@ -58,4 +58,9 @@ class Deal2 extends core\Deal2
         ];
     }
 
+    public function getStockName(){
+        $stock_list=Stock::find()->select('stock_name')->indexBy('id')->asArray()->column();
+        return $stock_list[$this->stock_id];
+    }
+
 }

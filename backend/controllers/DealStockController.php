@@ -90,6 +90,7 @@ class DealStockController extends Controller
         }
         return $this->render('create', [
             'model' => $model,
+            'stock_name'=>$model->getStockName(),
         ]);
     }
 }

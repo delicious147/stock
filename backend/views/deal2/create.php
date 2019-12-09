@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model common\models\core\Deal */
 
 $this->title = 'Create Deal';
-$this->params['breadcrumbs'][] = ['label' => 'Deals', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Index', 'url' => '/deal2/index'];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="deal-create">
