@@ -61,7 +61,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+//        return $this->render('index');
+        return $this->redirect('/deal2/index');
     }
 
     /**
@@ -77,7 +78,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect('/deal2/index');
         } else {
             $model->password = '';
 
