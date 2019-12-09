@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel backend\models\search\Deal2Search */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Deal2s';
+$this->title = 'Index';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <style>
@@ -50,6 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row clearfix">
         <div class="col-md-12 column">
             <div class="row clearfix">
+
                 <div class="col-md-6 column">
                     <h3>Sell price</h3>
                     <?= GridView::widget([
@@ -57,13 +58,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => ['class'=>'sell_box'],
                         'columns' => [
                             [
-                                'label'=>'Name',
-                                'format'=>'raw',
-                                'value' => function ($model) {
-                                    return $model['stock']['stock_name'];
-                                },
+                                'class' => 'yii\grid\ActionColumn',
+                                'header' => Yii::t('app', 'OPERATE'),
+                                'template' => '{daily}',
+                                'buttons' => [
+                                    'daily'=>function ($url, $model, $key) {
+                                        return Html::a($model['stock']['stock_name'],'/deal-stock/index?stock_id='.$model['stock']['id']);
+                                    },
+
+                                ],
                             ],
-//                            'name',
                             'price',
                             [
                                 'label'=>'Now Price',
@@ -94,7 +98,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'label'=>'Name',
                                 'format'=>'raw',
                                 'value' => function ($model) {
-                                    return $model['stock']['stock_name'];
+                                    return Html::a($model['stock']['stock_name'],'/deal-stock/index?stock_id='.$model['stock']['id']);
+//                                    return $model['stock']['stock_name'];
                                 },
                             ],
 //                            'name',
@@ -122,6 +127,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
+    <h3>List</h3>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -137,19 +143,34 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'format'=>'raw',
                 'label' => 'stock Name',
+                'filter' => \common\models\Deal2::getMap(),
                 'value' => function ($model) {
                     return $model->stock->stock_name;
                 }
             ],
-            'stock_id',
+//            'stock_id',
             'price',
             'num',
             'date',
             //'remark',
-            'status',
-            'is_sell',
+            [
+                'attribute' => 'status',
+                'filter' => \common\models\Deal2::getMap(),
+                'value' => function ($model) {
+                    $state_txt = \common\models\Deal2::getMap();
+                    return $state_txt[$model->status];
+                }
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ],
+            [
+                'attribute' => 'is_sell',
+                'filter' => \common\models\Deal2::getIsSellMap(),
+                'value' => function ($model) {
+                    $state_txt = \common\models\Deal2::getIsSellMap();
+                    return $state_txt[$model->is_sell];
+                }
+
+            ],
         ],
     ]); ?>
 </div>

@@ -13,6 +13,7 @@ use common\models\Deal2;
 class Deal2Search extends Deal2
 {
     public $stock_name;
+    public $stock_id;
 
     /**
      * {@inheritdoc}
@@ -22,7 +23,7 @@ class Deal2Search extends Deal2
         return [
             [['id', 'stock_id', 'num', 'status', 'is_sell'], 'integer'],
             [['price'], 'number'],
-            [['date', 'remark'], 'safe'],
+            [['date', 'remark','stock_name'], 'safe'],
         ];
     }
 
@@ -121,17 +122,34 @@ class Deal2Search extends Deal2
 
     }
 
+    public function inStock(){
+        $count=Deal2::find()
+            ->select(['stock_id','sum(num) count'])
+//            ->andFilterWhere(['stock_id' => $this->stock_id])
+            ->andWhere(['is_sell'=>0])
+            ->groupBy('stock_id')
+            ->asArray()
+            ->all();
+        $stock=Stock::find()->indexBy('id')->asArray()->all();
+        foreach ($count as $k=>$v){
+            $count[$k]['stock']=$stock[$v['stock_id']];
+        }
+        return $count;
+    }
+
     public function winMoney(){
         $buy_money=Deal2::find()
             ->select(['sum(price)*100 as buy_money'])
             ->andWhere(['status'=>0])
             ->andWhere(['is_sell'=>1])
+            ->andFilterWhere(['stock_id' => $this->stock_id])
             ->asArray()
             ->one();
 
         $sell_money=Deal2::find()
             ->select(['sum(price)*100 as sell_money'])
             ->andWhere(['status'=>1])
+            ->andFilterWhere(['stock_id' => $this->stock_id])
             ->asArray()
             ->one();
 
@@ -143,8 +161,10 @@ class Deal2Search extends Deal2
             ->select(['sum(price)*100 as money'])
             ->andWhere(['status'=>0])
             ->andWhere(['is_sell'=>0])
+            ->andFilterWhere(['stock_id' => $this->stock_id])
             ->asArray()
             ->one();
         return ceil($money['money']);
     }
+
 }

@@ -12,6 +12,7 @@ class Deal2 extends core\Deal2
     public function rules()
     {
         return [
+            [['stock_id', 'num', 'status','price'], 'required'],
             [['stock_id', 'num', 'status', 'is_sell'], 'integer'],
             [['price'], 'number'],
             [['date','stock_name'], 'safe'],
@@ -43,8 +44,17 @@ class Deal2 extends core\Deal2
 
     public static function getMap(){
         return [
+//            ''=>'全部',
             '0'=>'买',
             '1'=>'卖'
+        ];
+    }
+
+    public static function getIsSellMap(){
+        return [
+//            ''=>'全部',
+            '0'=>'持仓',
+            '1'=>'-'
         ];
     }
 

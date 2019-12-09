@@ -17,7 +17,7 @@ use yii\filters\VerbFilter;
 /**
  * DealController implements the CRUD actions for Deal model.
  */
-class Deal2Controller extends Controller
+class DealStockController extends Controller
 {
 
     public $modelClass = 'common\models\Deal2';
@@ -40,42 +40,31 @@ class Deal2Controller extends Controller
      * Lists all Deal models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($stock_id)
     {
         $searchModel = new Deal2Search();
+        $searchModel->stock_id=$stock_id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $provider_sell = new ArrayDataProvider([
-            'allModels' => $searchModel->minSellMoney(),
+
+        $provider_stock=new ArrayDataProvider([
+            'allModels' => $searchModel->inStock(),
             'sort' => false,
             'pagination' => false,
         ]);
-        $provider_buy = new ArrayDataProvider([
-            'allModels' => $searchModel->buyMoney(),
-            'sort' => false,
-            'pagination' => false,
-        ]);
-
-
-        $stock=Stock::getFullCode();
-        $stock=implode(",", $stock);
 
         return $this->render('index', [
-            'stock'=>$stock,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'provider_sell' => $provider_sell,
-            'provider_buy' => $provider_buy,
-
             'win_money'=>$searchModel->winMoney(),
             'in_money'=>$searchModel->inMoney(),
-
+            'provider_stock'=>$provider_stock,
         ]);
     }
 
-    public function actionCreate()
+    public function actionCreate($stock_id)
     {
         $model = new Deal2();
-
+        $model->stock_id=$stock_id;
         if ($model->load(Yii::$app->request->post())) {
             $num=$model->num;
             $count=$num/100;
