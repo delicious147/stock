@@ -83,6 +83,7 @@ class Deal2Controller extends Controller
                 $model = new Deal2();
                 $model->load(Yii::$app->request->post());
                 $model->num=100;
+                $model->is_sell=1;
                 $model->save();
                 if($model->status==1){
                     $lest_buy=Deal2::find()
