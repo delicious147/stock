@@ -88,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         },
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+//            ['class' => 'yii\grid\SerialColumn'],
             [
                 'format'=>'raw',
                 'label' => 'stock Name',
@@ -97,8 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             'price',
-            'num',
-            'date',
+//            'num',
             //'remark',
             [
                 'attribute' => 'status',
@@ -118,6 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
 
             ],
+            'date',
         ],
     ]); ?>
 </div>
