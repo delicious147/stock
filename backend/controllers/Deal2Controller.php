@@ -83,9 +83,8 @@ class Deal2Controller extends Controller
                 $model = new Deal2();
                 $model->load(Yii::$app->request->post());
                 $model->num=100;
-                $model->is_sell=1;
-                $model->save();
                 if($model->status==1){
+                    $model->is_sell=1;
                     $lest_buy=Deal2::find()
                         ->andWhere(['status'=>0])
                         ->andWhere(['is_sell'=>0])
@@ -97,6 +96,7 @@ class Deal2Controller extends Controller
                         $lest_buy->save();
                     }
                 }
+                $model->save();
             }
             return $this->redirect(['index']);
         }
