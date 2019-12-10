@@ -87,7 +87,7 @@ class DealStockController extends Controller
                 }
                 $model->save();
             }
-            return $this->redirect(['index']);
+            return $this->redirect('/deal-stock/index?stock_id='.$stock_id);
         }
         return $this->render('create', [
             'model' => $model,
