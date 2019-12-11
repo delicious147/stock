@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <style>
     .deal-index .red{color: #a94442;}
     .gray{color: #ccc;}
+    .red{color:#c63c26 }
     .box{ padding:10px;}
 </style>
 
