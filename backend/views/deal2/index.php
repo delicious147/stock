@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h3>Buy price</h3>
                     <?= GridView::widget([
                         'dataProvider' => $provider_buy,
-                        'options' => ['class'=>'sell_box'],
+                        'options' => ['class'=>'buy_box'],
                         'columns' => [
                             [
                                 'label'=>'Name',
