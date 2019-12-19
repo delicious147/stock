@@ -1,4 +1,5 @@
 <?php
+use yii\web\Response;
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
 //    require __DIR__ . '/../../common/config/params-local.php',
@@ -20,6 +21,18 @@ $config= [
             ],
             'cookieValidationKey' => 'jQyWD58IRqC_unWq9oQIhbHj-ph32j1c',
         ],
+//        'response' => [
+//            'class' => 'yii\web\Response',
+//            'format' => Response::FORMAT_JSON,
+//            'charset' => 'UTF-8',
+//            'formatters' => [
+//                Response::FORMAT_JSON => [
+//                    'class' => 'yii\web\JsonResponseFormatter',
+//                    'prettyPrint' => YII_DEBUG, // use "pretty" output in debug mode
+//                    'encodeOptions' => JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION
+//                ]
+//            ],
+//        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,

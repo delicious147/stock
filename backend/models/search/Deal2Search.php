@@ -99,13 +99,6 @@ class Deal2Search extends Deal2
         $buy=[];
         foreach ($stock as $k=>$v){
             $buy[$k]['stock']=$v;
-            $deal1=Deal2::find()
-                ->where(['stock_id'=>$v['id']])
-                ->andWhere(['status'=>0])
-                ->orderBy('date desc')
-                ->indexBy('stock_id')
-                ->asArray()
-                ->one();
             $deal2=Deal2::find()
                 ->where(['stock_id'=>$v['id']])
                 ->andWhere(['status'=>1])
@@ -113,7 +106,7 @@ class Deal2Search extends Deal2
                 ->indexBy('stock_id')
                 ->asArray()
                 ->one();
-            $buy[$k]['price']=strtotime($deal1['date'])>strtotime($deal2['date'])?$deal1['price']:$deal2['price'];
+            $buy[$k]['price']=$deal2['price'];
             $buy[$k]['1%_price']=round($buy[$k]['price']*0.99,2);
             $buy[$k]['2%_price']=round($buy[$k]['price']*0.98,2);
             $buy[$k]['4%_price']=round($buy[$k]['price']*0.96,2);
