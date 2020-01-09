@@ -186,10 +186,10 @@ $js = <<<JS
        var elements=eval("hq_str_"+stock_arr[i]).split(",")
        $('.'+stock_arr[i]).html(elements[3])
        // console.log($('.'+stock_arr[i]).next().html())
-       if($('.sell_box .'+stock_arr[i]).next().html()<$('.sell_box .'+stock_arr[i]).html()){
+       if($('.sell_box .'+stock_arr[i]).html()>$('.sell_box .'+stock_arr[i]).next().html()){
            $('.sell_box .'+stock_arr[i]).addClass('red')
        }
-       if($('.buy_box .'+stock_arr[i]).next().html()>$('.buy_box .'+stock_arr[i]).html()){
+       if($('.buy_box .'+stock_arr[i]).html()<$('.buy_box .'+stock_arr[i]).next().html()){
            $('.buy_box .'+stock_arr[i]).addClass('red')
        }
    }

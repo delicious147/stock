@@ -46,7 +46,7 @@ class Deal2Search extends Deal2
     public function search($params)
     {
         $query = Deal2::find();
-        $query->with('stock');
+//        $query->with('stock');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
