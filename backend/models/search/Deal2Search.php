@@ -101,7 +101,7 @@ class Deal2Search extends Deal2
             $buy[$k]['stock']=$v;
             $deal2=Deal2::find()
                 ->where(['stock_id'=>$v['id']])
-                ->andWhere(['status'=>1])
+//                ->andWhere(['status'=>1])
                 ->orderBy('date desc')
                 ->indexBy('stock_id')
                 ->asArray()
