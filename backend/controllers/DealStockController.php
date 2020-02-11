@@ -46,6 +46,8 @@ class DealStockController extends Controller
         $searchModel->stock_id=$stock_id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $pic=$searchModel->pic(Yii::$app->request->queryParams);
+
         $provider_stock=new ArrayDataProvider([
             'allModels' => $searchModel->inStock(),
             'sort' => false,
@@ -58,6 +60,7 @@ class DealStockController extends Controller
             'win_money'=>$searchModel->winMoney(),
             'in_money'=>$searchModel->inMoney(),
             'provider_stock'=>$provider_stock,
+            'pic'=>$pic,
         ]);
     }
 

@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-md-3 column">
             <div class="box center-block bg-success">
                 <p>Win money</p>
-                <h4><?= $win_money?></h4>
+                <h4><?= $win_money.' &nbsp;&nbsp;&nbsp;('. \common\components\MyHelper::makePercentage($win_money,$in_money).')'?></h4>
             </div>
         </div>
 

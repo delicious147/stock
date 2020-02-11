@@ -160,5 +160,81 @@ class Deal2Search extends Deal2
         return ceil($money['money']);
     }
 
+    public function pic($params){
+        $this->load($params);
+        $list=Deal2::find()
+            ->select([
+                'date_format(date,\'%y-%m-%d\') as date',
+                'if(status=0,price,"") as buy_price',
+                'if(status=1,price,"") as sell_price',
+            ])
+            ->andFilterWhere([
+                'id' => $this->id,
+                'stock_id' => $this->stock_id,
+                'price' => $this->price,
+                'num' => $this->num,
+                'date' => $this->date,
+                'status' => $this->status,
+                'is_sell' => $this->is_sell,
+            ])
+            ->orderBy('date desc')
+            ->limit(100)
+            ->asArray()
+            ->all()
+        ;
+
+        $pic=[];
+        foreach ($list as $k=>$v){
+            $date=$v['date'];
+            $pic[$date]['date']=$v['date'];
+            if($v['buy_price']){
+                if(!isset($pic[$date]['buy']) || ($pic[$date]['buy'] > $v['buy_price'])){
+                    $pic[$date]['buy']=$v['buy_price'];
+                }
+            }
+            if($v['sell_price']){
+                if(!isset($pic[$date]['sell']) || ($pic[$date]['sell'] < $v['sell_price'])) {
+                    $pic[$date]['sell'] = $v['sell_price'];
+                }
+            }
+        }
+        $res=[];
+        foreach ($pic as $k=>$v){
+            $res['date'][]=$v['date'];
+            $res['buy'][]=isset($v['buy'])?$v['buy']:'';
+            $res['sell'][]=isset($v['sell'])?$v['sell']:'';
+        }
+        $res['date']=array_reverse($res['date']);
+        $res['buy']=array_reverse($res['buy']);
+        $res['sell']=array_reverse($res['sell']);
+
+
+
+        $option=array(
+            'xAxis'=>array(
+                'type'=>'category',
+                'boundaryGap'=>false,
+                'data'=>$res['date']
+            ),
+            'yAxis'=>array(
+                'type'=>'value',
+                'scale'=>true,
+            ),
+            'series'=>[
+                array(
+                    'data'=>$res['buy'],
+                    'type'=>'line',
+                    'connectNulls'=>true
+                ),
+                array(
+                    'data'=>$res['sell'],
+                    'type'=>'line',
+                    'connectNulls'=>true
+                ),
+            ]
+        );
+        return json_encode($option);
+    }
+
 
 }

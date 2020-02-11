@@ -25,12 +25,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Deal', '/deal-stock/create?stock_id='.$searchModel->stock_id, ['class' => 'btn btn-success']) ?>
     </p>
 
-
     <div class="row clearfix">
         <div class="col-md-3 column">
             <div class="box center-block bg-success">
                 <p>Win money</p>
-                <h4><?= $win_money?></h4>
+                <h4><?= $win_money.' &nbsp;&nbsp;&nbsp;('. \common\components\MyHelper::makePercentage($win_money,$in_money).')'?></h4>
             </div>
         </div>
 
@@ -38,6 +37,13 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="box center-block bg-success">
                 <p>In money</p>
                 <h4><?= $in_money?></h4>
+            </div>
+        </div>
+
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div id="main" style="height: 300px">
             </div>
         </div>
 
@@ -122,3 +128,14 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 </div>
 
+<?php
+$this->registerJsFile("https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js");
+$js = <<<JS
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = $pic;
+    myChart.setOption(option);
+   
+JS;
+$this->registerJs($js);
+
+?>
