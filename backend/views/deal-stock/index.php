@@ -129,7 +129,12 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 </div>
 
+
 <?php
+//获取现价
+$stock_fullcode=$stock['full_code'];
+//图表
+$_count=count($pic['date']);
 $_date=json_encode(array_reverse($pic['date']));
 
 foreach ($pic['sell'] as $k=>$v){
@@ -160,10 +165,19 @@ foreach ($pic['buy'] as $k=>$v){
         break;
     }
 }
+
 $_buy=json_encode(array_reverse($pic['buy']));
 
+
+//js
+$this->registerJsFile("http://hq.sinajs.cn/list=$stock_fullcode");
 $this->registerJsFile("https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js");
-$js_pic = <<<JS
+$js = <<<JS
+// 现价
+    var elements=eval("hq_str_"+'$stock_fullcode').split(",")
+    $('#now_price').html(elements[3])
+   
+// 图表
     var myChart = echarts.init(document.getElementById('echarts_pic'));
     var option = {
             legend: {
@@ -211,19 +225,26 @@ $js_pic = <<<JS
                     }
                 },
             },
+            {
+                name: '现价',
+                data:  [elements[3]],
+                type: 'line',
+                markLine:{
+                    data: [
+                        {
+                            name: '现价',
+                            yAxis: [elements[3]]
+                        }
+                    ],
+                    label:{position:'middle'},
+                    symbol: 'none'
+                },
+            },
             ]
         };
     myChart.setOption(option);
    
 JS;
-$stock_fullcode=$stock['full_code'];
-$this->registerJsFile("http://hq.sinajs.cn/list=$stock_fullcode");
-$js_price = <<<JS
-    var elements=eval("hq_str_"+'$stock_fullcode').split(",")
-    $('#now_price').html(elements[3])
-   
-JS;
-$this->registerJs($js_pic);
-$this->registerJs($js_price);
+$this->registerJs($js);
 
 ?>
