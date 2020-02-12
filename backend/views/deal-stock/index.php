@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="deal2-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= $stock['stock_name'] ?></h3>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -36,14 +36,15 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-md-3 column">
             <div class="box center-block bg-success">
                 <p>In money</p>
-                <h4><?= $in_money?></h4>
+                <h5><?= $in_money?></h5>
             </div>
         </div>
 
     </div>
     <div class="row clearfix">
         <div class="col-md-12 column">
-            <div id="main" style="height: 300px">
+            <h4>现价：<span id="now_price"></span></h4>
+            <div id="echarts_pic" style="height: 220px;padding-top: 10px;">
             </div>
         </div>
 
@@ -129,13 +130,100 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
+$_date=json_encode(array_reverse($pic['date']));
+
+foreach ($pic['sell'] as $k=>$v){
+    if(!empty($v)){
+        $last_sell=$pic['sell'][$k];
+        $last_sell=array(
+            'value'=>$last_sell,
+            'label'=> array(
+                'show'=>true
+            )
+        );
+        $pic['sell'][$k]=$last_sell;
+        break;
+    }
+}
+$_sell=json_encode(array_reverse($pic['sell']));
+
+foreach ($pic['buy'] as $k=>$v){
+    if(!empty($v)){
+        $last_buy=$pic['buy'][$k];
+        $last_buy=array(
+            'value'=>$last_buy,
+            'label'=> array(
+                'show'=>true
+            )
+        );
+        $pic['buy'][$k]=$last_buy;
+        break;
+    }
+}
+$_buy=json_encode(array_reverse($pic['buy']));
+
 $this->registerJsFile("https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js");
-$js = <<<JS
-    var myChart = echarts.init(document.getElementById('main'));
-    var option = $pic;
+$js_pic = <<<JS
+    var myChart = echarts.init(document.getElementById('echarts_pic'));
+    var option = {
+            legend: {
+                data: ['买', '卖']
+            },
+            grid: {
+                top:'12%',
+                left: 0,
+                right: '8%',
+                bottom: 0,
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap:false,
+                data: $_date
+            },
+            yAxis: {
+                type: 'value',
+                scale:true,
+            },
+            series: [
+            {
+                name: '买',
+                data: $_buy,
+                // data: [10,20,15,{value:20,label: {show: true}},],
+                type: 'line',
+                connectNulls:true,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'bottom'
+                    }
+                },
+            },
+            {
+                name: '卖',
+                data: $_sell,
+                type: 'line',
+                connectNulls:true,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'top'
+                    }
+                },
+            },
+            ]
+        };
     myChart.setOption(option);
    
 JS;
-$this->registerJs($js);
+$stock_fullcode=$stock['full_code'];
+$this->registerJsFile("http://hq.sinajs.cn/list=$stock_fullcode");
+$js_price = <<<JS
+    var elements=eval("hq_str_"+'$stock_fullcode').split(",")
+    $('#now_price').html(elements[3])
+   
+JS;
+$this->registerJs($js_pic);
+$this->registerJs($js_price);
 
 ?>

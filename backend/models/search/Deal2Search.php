@@ -204,36 +204,7 @@ class Deal2Search extends Deal2
             $res['buy'][]=isset($v['buy'])?$v['buy']:'';
             $res['sell'][]=isset($v['sell'])?$v['sell']:'';
         }
-        $res['date']=array_reverse($res['date']);
-        $res['buy']=array_reverse($res['buy']);
-        $res['sell']=array_reverse($res['sell']);
-
-
-
-        $option=array(
-            'xAxis'=>array(
-                'type'=>'category',
-                'boundaryGap'=>false,
-                'data'=>$res['date']
-            ),
-            'yAxis'=>array(
-                'type'=>'value',
-                'scale'=>true,
-            ),
-            'series'=>[
-                array(
-                    'data'=>$res['buy'],
-                    'type'=>'line',
-                    'connectNulls'=>true
-                ),
-                array(
-                    'data'=>$res['sell'],
-                    'type'=>'line',
-                    'connectNulls'=>true
-                ),
-            ]
-        );
-        return json_encode($option);
+        return $res;
     }
 
 

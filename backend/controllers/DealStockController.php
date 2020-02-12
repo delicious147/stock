@@ -47,6 +47,7 @@ class DealStockController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $pic=$searchModel->pic(Yii::$app->request->queryParams);
+//        $stock=Stock::getFullCodeOne($stock_id);
 
         $provider_stock=new ArrayDataProvider([
             'allModels' => $searchModel->inStock(),
@@ -61,6 +62,7 @@ class DealStockController extends Controller
             'in_money'=>$searchModel->inMoney(),
             'provider_stock'=>$provider_stock,
             'pic'=>$pic,
+            'stock'=>Stock::find()->andWhere(['id'=>$stock_id])->one(),
         ]);
     }
 

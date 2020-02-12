@@ -25,6 +25,10 @@ class Stock extends core\Stock
         return Stock::find()->select(['CONCAT(type,stock_code)'])->column();
     }
 
+    public static function getFullCodeOne($id){
+        return Stock::find()->select(['CONCAT(type,stock_code)'])->andWhere(['id'=>$id])->scalar();
+    }
+
     public static function getFullCodeMap(){
         return Stock::find()->select('full_code')->indexBy('id')->column();
     }
