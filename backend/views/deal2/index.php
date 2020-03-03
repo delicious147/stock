@@ -19,26 +19,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="deal2-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <h3>首页</h3>
 
     <p>
-        <?= Html::a('Create Deal', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('新建订单', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('查看持仓', ['hold/index'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
     <div class="row clearfix">
-        <div class="col-md-3 column">
+        <div class="col-md-12 column">
             <div class="box center-block bg-success">
-                <p>Win money</p>
-                <h4><?= $win_money.' &nbsp;&nbsp;&nbsp;('. \common\components\MyHelper::makePercentage($win_money,$in_money).')'?></h4>
-            </div>
-        </div>
-
-        <div class="col-md-3 column">
-            <div class="box center-block bg-success">
-                <p>In money</p>
-                <h4><?= $in_money?></h4>
+                <div class="row clearfix">
+                    <div class="col-md-6 col-xs-6 column">
+                        <p>获利</p>
+                        <h4><?= $win_money.' &nbsp;&nbsp;&nbsp;('. \common\components\MyHelper::makePercentage($win_money,$in_money).')'?></h4>
+                    </div>
+                    <div class="col-md-6 col-xs-6 column">
+                        <p>在场</p>
+                        <h4><?= $in_money?></h4>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -95,7 +95,9 @@ class Deal2Search extends Deal2
     }
 
     public function BuyMoney(){
-        $stock=Stock::find()->indexBy('id')->asArray()->all();
+        $stock=Stock::find()
+            ->andWhere(['status'=>1])
+            ->indexBy('id')->asArray()->all();
         $buy=[];
         foreach ($stock as $k=>$v){
             $buy[$k]['stock']=$v;

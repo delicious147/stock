@@ -49,18 +49,19 @@ class DealStockController extends Controller
         $pic=$searchModel->pic(Yii::$app->request->queryParams);
 //        $stock=Stock::getFullCodeOne($stock_id);
 
-        $provider_stock=new ArrayDataProvider([
-            'allModels' => $searchModel->inStock(),
-            'sort' => false,
-            'pagination' => false,
-        ]);
+        $stock_num=$count=Deal2::find()
+            ->select(['sum(num)'])
+            ->andWhere(['stock_id'=>$stock_id])
+            ->andWhere(['is_sell'=>0])
+            ->scalar();
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'win_money'=>$searchModel->winMoney(),
             'in_money'=>$searchModel->inMoney(),
-            'provider_stock'=>$provider_stock,
+            'stock_num'=>$stock_num,
             'pic'=>$pic,
             'stock'=>Stock::find()->andWhere(['id'=>$stock_id])->one(),
         ]);

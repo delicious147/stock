@@ -22,61 +22,50 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Deal', '/deal-stock/create?stock_id='.$searchModel->stock_id, ['class' => 'btn btn-success']) ?>
+        <?= Html::a('新建订单', '/deal-stock/create?stock_id='.$searchModel->stock_id, ['class' => 'btn btn-success']) ?>
+        <?= Html::a('查看持仓', ['hold/index'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <div class="row clearfix">
-        <div class="col-md-3 column">
-            <div class="box center-block bg-success">
-                <p>Win money</p>
-                <h4><?= $win_money.' &nbsp;&nbsp;&nbsp;('. \common\components\MyHelper::makePercentage($win_money,$in_money).')'?></h4>
-            </div>
-        </div>
-
-        <div class="col-md-3 column">
-            <div class="box center-block bg-success">
-                <p>In money</p>
-                <h5><?= $in_money?></h5>
-            </div>
-        </div>
-
-    </div>
-    <div class="row clearfix">
         <div class="col-md-12 column">
-            <h4>现价：<span id="now_price"></span></h4>
+            <div class="box center-block bg-success">
+                <div class="row clearfix">
+                    <div class="col-md-6 col-xs-6 column">
+                        <p>获利</p>
+                        <h4><?= $win_money.' &nbsp;&nbsp;&nbsp;('. \common\components\MyHelper::makePercentage($win_money,$in_money).')'?></h4>
+                    </div>
+                    <div class="col-md-6 col-xs-6 column">
+                        <p>在场</p>
+                        <h4><?= $in_money?></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 column">
+            <div class="box center-block bg-success">
+                <div class="row clearfix">
+                    <div class="col-md-6 col-xs-6 column">
+                        <p>现价</p>
+                        <h4 id="now_price"></h4>
+                    </div>
+                    <div class="col-md-6 col-xs-6 column">
+                        <p>持仓</p>
+                        <h4><?= $stock_num?></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-12 column">
             <div id="echarts_pic" style="height: 220px;padding-top: 10px;">
             </div>
         </div>
 
     </div>
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-            <div class="row clearfix">
-                <div class="col-md-4 column">
-                    <h3>Have Num</h3>
-                    <?= GridView::widget([
-                        'dataProvider' => $provider_stock,
-                        'options' => ['class'=>'sell_box'],
-                        'columns' => [
-                            [
-                                'class' => 'yii\grid\ActionColumn',
-                                'header' => Yii::t('app', 'OPERATE'),
-                                'template' => '{daily}',
-                                'buttons' => [
-                                    'daily'=>function ($url, $model, $key) {
-                                        return Html::a($model['stock']['stock_name'],'/deal-stock/index?stock_id='.$model['stock']['id']);
-                                    },
 
-                                ],
-                            ],
-                            'count',
-
-                        ],
-                    ]); ?>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <?php
     $stock_map=\common\models\Stock::getMap();
