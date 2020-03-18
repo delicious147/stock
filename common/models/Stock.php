@@ -22,7 +22,7 @@ class Stock extends core\Stock
     }
 
     public static function getFullCode(){
-        return Stock::find()->select(['CONCAT(type,stock_code)'])->column();
+        return Stock::find()->select(['CONCAT(type,stock_code)'])->where(['!=','stock_code','0'])->column();
     }
 
     public static function getFullCodeOne($id){

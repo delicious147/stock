@@ -164,12 +164,10 @@ class Deal2Search extends Deal2
 
     public function pic($params){
         $this->load($params);
-        $list=Deal2::find()
-            ->select([
-                'date_format(date,\'%y-%m-%d\') as date',
-                'if(status=0,price,"") as buy_price',
-                'if(status=1,price,"") as sell_price',
-            ])
+
+        $buy_prices=Deal2::find()
+            ->select(['price'])
+            ->where(['status'=>0])
             ->andFilterWhere([
                 'id' => $this->id,
                 'stock_id' => $this->stock_id,
@@ -180,32 +178,30 @@ class Deal2Search extends Deal2
                 'is_sell' => $this->is_sell,
             ])
             ->orderBy('date desc')
-            ->limit(100)
-            ->asArray()
-            ->all()
-        ;
+            ->limit(50)
+            ->column();
 
-        $pic=[];
-        foreach ($list as $k=>$v){
-            $date=$v['date'];
-            $pic[$date]['date']=$v['date'];
-            if($v['buy_price']){
-                if(!isset($pic[$date]['buy']) || ($pic[$date]['buy'] > $v['buy_price'])){
-                    $pic[$date]['buy']=$v['buy_price'];
-                }
-            }
-            if($v['sell_price']){
-                if(!isset($pic[$date]['sell']) || ($pic[$date]['sell'] < $v['sell_price'])) {
-                    $pic[$date]['sell'] = $v['sell_price'];
-                }
-            }
-        }
+        $sell_prices=Deal2::find()
+            ->select(['price'])
+            ->where(['status'=>1])
+            ->andFilterWhere([
+                'id' => $this->id,
+                'stock_id' => $this->stock_id,
+                'price' => $this->price,
+                'num' => $this->num,
+                'date' => $this->date,
+                'status' => $this->status,
+                'is_sell' => $this->is_sell,
+            ])
+            ->orderBy('date desc')
+            ->limit(50)
+            ->column();
+
+
         $res=[];
-        foreach ($pic as $k=>$v){
-            $res['date'][]=$v['date'];
-            $res['buy'][]=isset($v['buy'])?$v['buy']:'';
-            $res['sell'][]=isset($v['sell'])?$v['sell']:'';
-        }
+        $res['buy']=$buy_prices;
+        $res['sell']=$sell_prices;
+
         return $res;
     }
 

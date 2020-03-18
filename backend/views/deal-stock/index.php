@@ -42,7 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
-        <div class="col-md-6 column">
+        <div class="col-md-12 column">
             <div class="box center-block bg-success">
                 <div class="row clearfix">
                     <div class="col-md-6 col-xs-6 column">
@@ -123,39 +123,25 @@ $this->params['breadcrumbs'][] = $this->title;
 //获取现价
 $stock_fullcode=$stock['full_code'];
 //图表
-$_count=count($pic['date']);
-$_date=json_encode(array_reverse($pic['date']));
-
-foreach ($pic['sell'] as $k=>$v){
-    if(!empty($v)){
-        $last_sell=$pic['sell'][$k];
-        $last_sell=array(
-            'value'=>$last_sell,
-            'label'=> array(
-                'show'=>true
-            )
-        );
-        $pic['sell'][$k]=$last_sell;
-        break;
-    }
-}
+$pic['sell'][0]=array(
+    'value'=>isset($pic['sell'][0])?$pic['sell'][0]:0,
+//    'value'=>$pic['sell'][0],
+    'label'=> array(
+        'show'=>true
+    )
+);
 $_sell=json_encode(array_reverse($pic['sell']));
 
-foreach ($pic['buy'] as $k=>$v){
-    if(!empty($v)){
-        $last_buy=$pic['buy'][$k];
-        $last_buy=array(
-            'value'=>$last_buy,
-            'label'=> array(
-                'show'=>true
-            )
-        );
-        $pic['buy'][$k]=$last_buy;
-        break;
-    }
-}
-
+$pic['buy'][0]=array(
+    'value'=>isset($pic['buy'][0])?$pic['buy'][0]:0,
+//    'value'=>$pic['buy'][0],
+    'label'=> array(
+        'show'=>true
+    )
+);
 $_buy=json_encode(array_reverse($pic['buy']));
+
+$_count=count($pic['sell'])>=count($pic['buy'])?count($pic['sell']):count($pic['buy']);
 
 
 //js
@@ -163,8 +149,16 @@ $this->registerJsFile("http://hq.sinajs.cn/list=$stock_fullcode");
 $this->registerJsFile("https://cdn.bootcss.com/echarts/4.4.0-rc.1/echarts.min.js");
 $js = <<<JS
 // 现价
-    var elements=eval("hq_str_"+'$stock_fullcode').split(",")
-    $('#now_price').html(elements[3])
+//console.log($stock_fullcode);
+_stock_fullcode='$stock_fullcode'
+    if(_stock_fullcode){
+        var elements=eval("hq_str_"+'$stock_fullcode').split(",")
+        $('#now_price').html(elements[3])
+        _now_price=elements[3]
+    }else {
+        _now_price=$_buy
+    }
+
    
 // 图表
     var myChart = echarts.init(document.getElementById('echarts_pic'));
@@ -181,8 +175,9 @@ $js = <<<JS
             },
             xAxis: {
                 type: 'category',
+                // type: 'time',
                 boundaryGap:false,
-                data: $_date
+                data: [...new Array($_count).keys()]
             },
             yAxis: {
                 type: 'value',
@@ -216,13 +211,13 @@ $js = <<<JS
             },
             {
                 name: '现价',
-                data:  [elements[3]],
+                data:  [_now_price],
                 type: 'line',
                 markLine:{
                     data: [
                         {
                             name: '现价',
-                            yAxis: [elements[3]]
+                            yAxis: [_now_price]
                         }
                     ],
                     label:{position:'middle'},
