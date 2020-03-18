@@ -125,23 +125,24 @@ $stock_fullcode=$stock['full_code'];
 //图表
 $pic['sell'][0]=array(
     'value'=>isset($pic['sell'][0])?$pic['sell'][0]:0,
-//    'value'=>$pic['sell'][0],
     'label'=> array(
         'show'=>true
     )
 );
-$_sell=json_encode(array_reverse($pic['sell']));
-
 $pic['buy'][0]=array(
     'value'=>isset($pic['buy'][0])?$pic['buy'][0]:0,
-//    'value'=>$pic['buy'][0],
     'label'=> array(
         'show'=>true
     )
 );
-$_buy=json_encode(array_reverse($pic['buy']));
+$_count=count($pic['buy']);
 
-$_count=count($pic['sell'])>=count($pic['buy'])?count($pic['sell']):count($pic['buy']);
+$shao=count($pic['buy'])-count($pic['sell']);
+for($i=0;$i<$shao;$i++){
+    $pic['sell'][]='';
+}
+$_sell=json_encode(array_reverse($pic['sell']));
+$_buy=json_encode(array_reverse($pic['buy']));
 
 
 //js
